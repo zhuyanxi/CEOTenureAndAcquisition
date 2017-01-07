@@ -8,9 +8,9 @@ def main():
 
 
 def deal_CM_GM_Tenure():
-    CM_GM_table = re.excel_table_byname(file='CM_GM.xls', by_name=u'data')
+    CM_GM_table = re.excel_table_to_NormalDict(file='CM_GM.xls', by_name=u'data')
     print('len of CM_GM_table: %d' % len(CM_GM_table))
-    company_industry_tables = re.excel_table_byname(file='company_industry_sub.xls', by_name=u'sub_data')
+    company_industry_tables = re.excel_table_to_NormalDict(file='company_industry_sub.xls', by_name=u'sub_data')
     print('len of company_industry_tables: %d' % len(company_industry_tables))
 
     filter_table = []
@@ -90,7 +90,7 @@ def deal_CM_GM_Tenure():
 
 
 def calculate_tenure():
-    CM_GM_table = re.excel_table_byname(file='CM_GM_Tenure.xls', by_name=u'data')
+    CM_GM_table = re.excel_table_to_NormalDict(file='CM_GM_Tenure.xls', by_name=u'data')
     for item in CM_GM_table:
         print(list(item))
     print('len of CM_GM_table: %d' % len(CM_GM_table))
