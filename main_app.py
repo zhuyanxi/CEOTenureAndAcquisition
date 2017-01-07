@@ -24,7 +24,18 @@ def main():
     # filter_merge_acquisition()
     # filter_company_industry()
 
-    combine_industry_and_acquisition()
+    # combine_industry_and_acquisition()
+    filter_ceos()
+
+
+def filter_ceos():
+    tables = []
+    for i in range(1, 10):
+        table = re.excel_table_byname(file='CG_Director_new.xls', by_name=u'CEO' + str(i))
+        tables.extend(table)
+    print(len(tables))
+
+    result=[]
 
 
 def combine_industry_and_acquisition():

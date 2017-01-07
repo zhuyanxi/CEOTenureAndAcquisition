@@ -91,6 +91,8 @@ def deal_CM_GM_Tenure():
 
 def calculate_tenure():
     CM_GM_table = re.excel_table_byname(file='CM_GM_Tenure.xls', by_name=u'data')
+    for item in CM_GM_table:
+        print(list(item))
     print('len of CM_GM_table: %d' % len(CM_GM_table))
 
 
