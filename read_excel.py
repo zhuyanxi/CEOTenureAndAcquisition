@@ -34,7 +34,7 @@ def excel_table_byname(file, by_name, colnameindex=0):
             for i in range(len(colnames)):
                 app[colnames[i]] = row[i]
             resultlist.append(app)
-            print(app)
+            # print(app)
     return resultlist
 
 

@@ -90,9 +90,9 @@ def filter_merge_acquisition():
 
 def filter_dict_list_data(data_table, filter_col, filter):
     result = []
-    for i in range(data_table):
+    for i in range(len(data_table)):
         row = data_table[i]
-        if filter in row[filter_col]:
+        if filter not in row[filter_col]:
             result.append(row)
     return result
 
