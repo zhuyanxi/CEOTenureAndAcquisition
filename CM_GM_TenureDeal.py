@@ -3,7 +3,8 @@ import write_excel as we
 
 
 def main():
-    deal_CM_GM_Tenure()
+    # deal_CM_GM_Tenure()
+    calculate_tenure()
 
 
 def deal_CM_GM_Tenure():
@@ -63,28 +64,34 @@ def deal_CM_GM_Tenure():
     print('len of first result: %d' % len(result))
 
     final_result = []
-    isContinue=0
+    isContinue = 0
     for i in result:
+        if i['Chairman'] == '' and i['General_Manager'] == '':
+            continue
         for j in final_result:
             if i['Year'] == j['Year'] and i['StockNum'] == j['StockNum']:
                 j['Chairman'] = i['Chairman'] if i['Chairman'] != '' else j['Chairman']
                 j['General_Manager'] = i['General_Manager'] if i['General_Manager'] != '' else j['General_Manager']
-                isContinue=1
+                isContinue = 1
+                print(j)
                 break
-
-        if isContinue==1:
-            isContinue=0
+        if isContinue == 1:
+            isContinue = 0
             continue
         final_result.append(i)
 
-
-    for item in final_result:
-        print(item)
+    # for item in final_result:
+    #     print(item)
 
     print('len of final result: %d' % len(final_result))
-    # we.write_excel_two_Sheet('CM_GM_Tenure.xls', 'data', result)
+    we.write_excel('CM_GM_Tenure.xls', 'data', final_result)
     # for k in range(len(result)):
     #     print(result[k])
+
+
+def calculate_tenure():
+    CM_GM_table = re.excel_table_byname(file='CM_GM_Tenure.xls', by_name=u'data')
+    print('len of CM_GM_table: %d' % len(CM_GM_table))
 
 
 if __name__ == "__main__":
