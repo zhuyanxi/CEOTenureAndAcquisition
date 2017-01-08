@@ -1,36 +1,34 @@
 import read_excel as re
 import write_excel as we
 from operator import itemgetter
+from collections import Counter
+from itertools import groupby
+from collections import OrderedDict
 
-
-# if 'CEO' in app['D0201b'] or '董事长' in app['D0201b'] or '总经理' in app['D0201b'] or '总裁' in app['D0201b']:
-#     if '副' not in app['D0201b']:
-#         resultlist.append(app)
-#         print(app)
 
 def main():
-    # tables = []
-    # for i in range(1, 10):
-    #     table = re.excel_table_byname(file='CG_Director_new.xls', by_name=u'CEO' + str(i))
-    #     tables.extend(table)
-    # print(len(tables))
-    # we.write_excel('CEO_Final_data.xls', 'final_data', tables)
-
-    # tables = re.subsample_filter(file='CEO_Final_data.xls', by_name=u'final_data')
-    # print(len(tables))
-    # we.write_excel('CEO_subsample.xls', 'sub_data', tables)
-    # tables = re.excel_table_byname(file='CEO_Final_data.xls', by_name=u'final_data')
-    # print(len(tables))
-
     # filter_merge_acquisition()
 
     # filter_company_industry()
 
-    combine_industry_and_acquisition()
+    # combine_industry_and_acquisition()
 
     # filter_ceo_data()
 
     # sort_ceo_final_data()
+
+    # table = re.excel_table_to_OrderedDict(file='M&A_industry_combine.xls', by_name=u'combine_data')
+    # years=[]
+    # for item in table:
+    #     years.append(str(item['FirstDeclareDate']).split('-')[0])
+    #
+    # print(len(years))
+    # count=Counter(years)
+    # print(count)
+    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine.xls', by_name=u'combine_data')
+    result = group_data(table, 'IsSucceed', 'IsSuccess')
+    for item in result:
+        print(item)
 
 
 def filter_ceo_data():
@@ -70,8 +68,10 @@ def combine_industry_and_acquisition():
     '''
     匹配合并并购表和行业表
     '''
-    company_industry_tables = re.excel_table_to_OrderedDict(file='company_industry_filter_sample.xls', by_name=u'sub_data')
-    M_A_subsample_tables = re.excel_table_to_OrderedDict(file='merger_and_acquisition_filter_sample.xls', by_name=u'data')
+    company_industry_tables = re.excel_table_to_OrderedDict(file='company_industry_filter_sample.xls',
+                                                            by_name=u'sub_data')
+    M_A_subsample_tables = re.excel_table_to_OrderedDict(file='merger_and_acquisition_filter_sample.xls',
+                                                         by_name=u'data')
 
     print('len of company_industry_tables: %d' % len(company_industry_tables))
     print('len of M_A_subsample_tables: %d' % len(M_A_subsample_tables))
@@ -130,12 +130,68 @@ def filter_merge_acquisition():
     print(len(result))
 
 
-def filter_dict_list_data(data_table, filter_col, filter):
+def group_M_A_by_year():
+    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine.xls', by_name=u'combine_data')
+    for item in table:
+        item['FirstDeclareYear'] = str(item['FirstDeclareDate']).split('-')[0]
+
     result = []
-    for i in range(len(data_table)):
-        row = data_table[i]
-        if filter not in row[filter_col]:
-            result.append(row)
+    # Sort by the desired field first
+    table.sort(key=itemgetter('FirstDeclareYear'))
+    # Iterate in groups
+    for FirstDeclareYear, items in groupby(table, key=itemgetter('FirstDeclareYear')):
+        app = {}
+        app['Year'] = FirstDeclareYear
+        print(FirstDeclareYear)
+        lenItem = 0
+        for i in items:
+            lenItem += 1
+            # print(' ', i)
+        app['Times'] = lenItem
+        result.append(app)
+        print(' ', lenItem)
+
+    we.write_excel('M&A_groupby_year.xls', 'data', result)
+
+
+def group_M_A_by_industry():
+    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine.xls', by_name=u'combine_data')
+    result1 = []
+    # Sort by the desired field first
+    table.sort(key=itemgetter('Nnindcd'))
+    # Iterate in groups
+    for Nnindcd, items in groupby(table, key=itemgetter('Nnindcd')):
+        app = OrderedDict()
+        app['IndustryId'] = Nnindcd
+        print(Nnindcd)
+        lenItem = 0
+        industry_name = ''
+        for i in items:
+            lenItem += 1
+            industry_name = dict(i)['Nnindnme']
+            # print(' ', i)
+        app['Times'] = lenItem
+        app['IndustryName'] = industry_name
+        result1.append(app)
+        print(' ', lenItem, '---' + industry_name)
+
+    we.write_excel('M&A_groupby_industry.xls', 'data', result1)
+
+
+def group_data(data_table, group_col, group_title):
+    result = []
+    data_table.sort(key=itemgetter(group_col))
+    for group_col, items in groupby(data_table, key=itemgetter(group_col)):
+        app = OrderedDict()
+        app[group_title] = group_col
+        print(group_col)
+        lenItem = 0
+        for i in items:
+            lenItem += 1
+            # print(' ', i)
+        app['Times'] = lenItem
+        result.append(app)
+        print(' ', lenItem)
     return result
 
 
