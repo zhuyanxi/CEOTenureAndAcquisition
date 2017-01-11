@@ -25,25 +25,31 @@ def main():
     # print(len(years))
     # count=Counter(years)
     # print(count)
-    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine_except2017.xls', by_name=u'data')
-    result = group_data(table, 'IsSucceed', 'IsSuccess')
-    for item in result:
-        print(item)
 
-    table2 = re.excel_table_to_OrderedDict(file='M&A_industry_combine.xls', by_name=u'combine_data')
+    # companyNums = []
+    # for i in range(5):
+    #     table = re.excel_table_to_OrderedDict_byIndex(file='CG_Ceo.xls', by_index=i, dataRow=3)
+    #     resultList=group_data(table,'Stkcd','StockId')
+    #     print(len(resultList))
+    #     companyNums.append(len(resultList))
+    # print(companyNums)
 
+    # table = re.excel_table_to_OrderedDict_byIndex(file='CG_Ceo.xls', by_index=0, dataRow=3)
+    # resultList = group_data(table, 'Stkcd', 'StockId')
+    # print(len(resultList))
+
+    table = re.excel_table_to_OrderedDict_byIndex(file='CG_Ceo.xls', by_index=0, dataRow=3)
     print(len(table))
-    print(len(table2))
-
-    group_M_A_by_year()
-    group_M_A_by_industry()
+    result=[item for item in table if item['Stkcd']=='000001']
+    print([item for item in result])
+    print(len(result))
 
 
 def filter_ceo_data():
     tables = []
     for i in range(1, 10):
         # table = re.excel_table_byname(file='CG_Director_new.xls', by_name=u'CEO' + str(i))
-        table = re.excel_table_to_OrderedDict(file='CG_Director_new.xls', by_name=u'CEO' + str(i))
+        table = re.excel_table_to_OrderedDict_bySheetName(file='CG_Director_new.xls', by_name=u'CEO' + str(i))
         print(len(table))
         tables.extend(table)
     print('len of tables: %d' % len(tables))
@@ -63,7 +69,7 @@ def filter_ceo_data():
 
 
 def sort_ceo_final_data():
-    table = re.excel_table_to_OrderedDict(file='CEO_final_V2.xls', by_name=u'data')
+    table = re.excel_table_to_OrderedDict_bySheetName(file='CEO_final_V2.xls', by_name=u'data')
     result = sorted(table, key=itemgetter('Stkcd', 'Reptdt'))
     for item in result:
         print(item)
@@ -76,10 +82,10 @@ def combine_industry_and_acquisition():
     '''
     匹配合并并购表和行业表
     '''
-    company_industry_tables = re.excel_table_to_OrderedDict(file='company_industry_filter_sample.xls',
-                                                            by_name=u'sub_data')
-    M_A_subsample_tables = re.excel_table_to_OrderedDict(file='merger_and_acquisition_filter_sample.xls',
-                                                         by_name=u'data')
+    company_industry_tables = re.excel_table_to_OrderedDict_bySheetName(file='company_industry_filter_sample.xls',
+                                                                        by_name=u'sub_data')
+    M_A_subsample_tables = re.excel_table_to_OrderedDict_bySheetName(file='merger_and_acquisition_filter_sample.xls',
+                                                                     by_name=u'data')
 
     print('len of company_industry_tables: %d' % len(company_industry_tables))
     print('len of M_A_subsample_tables: %d' % len(M_A_subsample_tables))
@@ -104,7 +110,7 @@ def filter_company_industry():
     过滤公司行业数据：
     剔除B股、ST股、金融行业（行业代码已J开头）
     '''
-    tables = re.excel_table_to_OrderedDict(file='company-industry.xls', by_name=u'CG_Co')
+    tables = re.excel_table_to_OrderedDict_bySheetName(file='company-industry.xls', by_name=u'CG_Co')
     print(len(tables))
     result = []
     for i in range(len(tables)):
@@ -123,8 +129,9 @@ def filter_merge_acquisition():
     BusinessID [业务编码]：包含A=资产、B=股权，
     TradingPositionID [上市公司交易地位编码]：S3101=买方、S3106=既是买方又是标的方
     '''
-    tables = re.excel_table_to_OrderedDict(file='merger_and_acquisition.xls', by_name=u'STK_MA_TRADINGMAIN')
-    tables.extend(re.excel_table_to_OrderedDict(file='merger_and_acquisition.xls', by_name=u'STK_MA_TRADINGMAIN1'))
+    tables = re.excel_table_to_OrderedDict_bySheetName(file='merger_and_acquisition.xls', by_name=u'STK_MA_TRADINGMAIN')
+    tables.extend(
+        re.excel_table_to_OrderedDict_bySheetName(file='merger_and_acquisition.xls', by_name=u'STK_MA_TRADINGMAIN1'))
     print(len(tables))
     result = []
     for i in range(len(tables)):
@@ -139,7 +146,7 @@ def filter_merge_acquisition():
 
 
 def group_M_A_by_year():
-    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine_except2017.xls', by_name=u'data')
+    table = re.excel_table_to_OrderedDict_bySheetName(file='M&A_industry_combine_except2017.xls', by_name=u'data')
     for item in table:
         item['FirstDeclareYear'] = str(item['FirstDeclareDate']).split('-')[0]
 
@@ -163,7 +170,7 @@ def group_M_A_by_year():
 
 
 def group_M_A_by_industry():
-    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine_except2017.xls', by_name=u'data')
+    table = re.excel_table_to_OrderedDict_bySheetName(file='M&A_industry_combine_except2017.xls', by_name=u'data')
     result1 = []
     # Sort by the desired field first
     table.sort(key=itemgetter('Nnindcd'))
@@ -192,14 +199,14 @@ def group_data(data_table, group_col, group_title):
     for group_col, items in groupby(data_table, key=itemgetter(group_col)):
         app = OrderedDict()
         app[group_title] = group_col
-        print(group_col)
+        # print(group_col)
         lenItem = 0
         for i in items:
             lenItem += 1
             # print(' ', i)
         app['Times'] = lenItem
         result.append(app)
-        print(' ', lenItem)
+        # print(' ', lenItem)
     return result
 
 
