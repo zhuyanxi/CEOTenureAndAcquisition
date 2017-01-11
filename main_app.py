@@ -40,9 +40,15 @@ def main():
 
     table = re.excel_table_to_OrderedDict_byIndex(file='CG_Ceo.xls', by_index=0, dataRow=3)
     print(len(table))
-    result=[item for item in table if item['Stkcd']=='000001']
-    print([item for item in result])
+    result = [item for item in table if item['Stkcd'] == '000001']
+    for item in result:
+        print(dict(item))
     print(len(result))
+
+
+def filter_dict_list_basic(data_table, filter_key, filter_value, isContain):
+    result = list(filter(lambda item: item[filter_key] == filter_value, data_table))
+    return result
 
 
 def filter_ceo_data():
