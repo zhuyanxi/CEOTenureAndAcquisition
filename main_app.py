@@ -25,10 +25,18 @@ def main():
     # print(len(years))
     # count=Counter(years)
     # print(count)
-    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine.xls', by_name=u'combine_data')
+    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine_except2017.xls', by_name=u'data')
     result = group_data(table, 'IsSucceed', 'IsSuccess')
     for item in result:
         print(item)
+
+    table2 = re.excel_table_to_OrderedDict(file='M&A_industry_combine.xls', by_name=u'combine_data')
+
+    print(len(table))
+    print(len(table2))
+
+    group_M_A_by_year()
+    group_M_A_by_industry()
 
 
 def filter_ceo_data():
@@ -131,7 +139,7 @@ def filter_merge_acquisition():
 
 
 def group_M_A_by_year():
-    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine.xls', by_name=u'combine_data')
+    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine_except2017.xls', by_name=u'data')
     for item in table:
         item['FirstDeclareYear'] = str(item['FirstDeclareDate']).split('-')[0]
 
@@ -155,7 +163,7 @@ def group_M_A_by_year():
 
 
 def group_M_A_by_industry():
-    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine.xls', by_name=u'combine_data')
+    table = re.excel_table_to_OrderedDict(file='M&A_industry_combine_except2017.xls', by_name=u'data')
     result1 = []
     # Sort by the desired field first
     table.sort(key=itemgetter('Nnindcd'))
