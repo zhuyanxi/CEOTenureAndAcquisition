@@ -1,11 +1,19 @@
 from operator import itemgetter
 
 
-def filter_dict_list_basic(data_table, filter_key, filter_value, isContain):
-    if isContain:
+def filter_dict_list_equal_or_not(data_table, filter_key, filter_value, isEqual):
+    if isEqual:
         result = list(filter(lambda item: item[filter_key] == filter_value, data_table))
     else:
         result = list(filter(lambda item: item[filter_key] != filter_value, data_table))
+    return result
+
+
+def filter_dict_list_contain_or_not(data_table, filter_key, filter_value, isContain):
+    if isContain:
+        result = list(filter(lambda item: filter_value in item[filter_key], data_table))
+    else:
+        result = list(filter(lambda item: filter_value not in item[filter_key], data_table))
     return result
 
 

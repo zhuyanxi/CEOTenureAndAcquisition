@@ -56,15 +56,41 @@ def main():
     # print(len(result))
     # we.write_excel('CEO_final_General_Manager.xls', 'data', result)
 
-    table = re.excel_table_to_OrderedDict_bySheetName(file='company_industry_filter_sample.xls', by_name=u'data')
-    # result = [item for item in table if item['Nnindcd'] == '']
-    result = common_lib.filter_dict_list_basic(data_table=table, filter_key='Nnindcd', filter_value='', isContain=True)
+    # table = re.excel_table_to_OrderedDict_bySheetName(file='company_industry_filter_sample.xls', by_name=u'data')
+    # # result = [item for item in table if item['Nnindcd'] == '']
+    # result = common_lib.filter_dict_list_equal_or_not(data_table=table, filter_key='Nnindcd', filter_value='', isEqual=True)
+    # for item in result:
+    #     print(item)
+    # print(len(result))
+    # we.write_excel('company_industry_can_not_research.xls', 'data', result)
+
+    table = re.excel_table_to_OrderedDict_bySheetName(file='M&A_industry_combine_except2017.xls',
+                                                      by_name=u'SucceedAndNonRelevance')
+    for item in table:
+        item['Year'] = str(item['FirstDeclareDate']).split('-')[0]
+    table.sort(key=itemgetter('Stkcd'))
+
+    result = []
+    for StockId, items1 in groupby(table, key=itemgetter('Stkcd')):
+        # app = OrderedDict()
+        # app['Stkcd'] = StockId
+        # print(StockId)
+        for Year, items2 in groupby(items1, key=itemgetter('Year')):
+            app = OrderedDict()
+            app['Stkcd'] = StockId
+            lenItem2 = 0
+            app['Year'] = Year
+            # print(Year)
+            for i in items2:
+                lenItem2 += 1
+                # print(' ', i)
+            app['Times'] = lenItem2
+            result.append(app)
+
     for item in result:
         print(item)
     print(len(result))
-    we.write_excel('company_industry_can_not_research.xls', 'data', result)
-
-
+    we.write_excel('M&A_industry_count_by_StkcdAndYear.xls', 'data', result)
 
 
 def filter_ceo_data():
