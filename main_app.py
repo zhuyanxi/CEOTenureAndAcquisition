@@ -1,5 +1,6 @@
 import read_excel as re
 import write_excel as we
+import common_lib
 from operator import itemgetter
 from collections import Counter
 from itertools import groupby
@@ -38,17 +39,32 @@ def main():
     # resultList = group_data(table, 'Stkcd', 'StockId')
     # print(len(resultList))
 
-    table = re.excel_table_to_OrderedDict_byIndex(file='CG_Ceo.xls', by_index=0, dataRow=3)
-    print(len(table))
-    result = [item for item in table if item['Stkcd'] == '000001']
+    # table = re.excel_table_to_OrderedDict_byIndex(file='CG_Ceo.xls', by_index=0, dataRow=3)
+    # print(len(table))
+    # result = [item for item in table if item['Stkcd'] == '000001']
+    # for item in result:
+    #     print(dict(item))
+    # print(len(result))
+
+    # table = re.excel_table_to_OrderedDict_bySheetName(file='CEO_final_V2.xls', by_name=u'data')
+    # result = []
+    # for item in table:
+    #     zhiwei = str(item['D0201a'])
+    #     isGM = [zhiwei[2:4], zhiwei[4:6]]
+    #     if '30' in isGM:
+    #         result.append(item)
+    # print(len(result))
+    # we.write_excel('CEO_final_General_Manager.xls', 'data', result)
+
+    table = re.excel_table_to_OrderedDict_bySheetName(file='company_industry_filter_sample.xls', by_name=u'data')
+    # result = [item for item in table if item['Nnindcd'] == '']
+    result = common_lib.filter_dict_list_basic(data_table=table, filter_key='Nnindcd', filter_value='', isContain=True)
     for item in result:
-        print(dict(item))
+        print(item)
     print(len(result))
+    we.write_excel('company_industry_can_not_research.xls', 'data', result)
 
 
-def filter_dict_list_basic(data_table, filter_key, filter_value, isContain):
-    result = list(filter(lambda item: item[filter_key] == filter_value, data_table))
-    return result
 
 
 def filter_ceo_data():
