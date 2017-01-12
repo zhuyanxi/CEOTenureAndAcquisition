@@ -1,4 +1,5 @@
 from operator import itemgetter
+import numpy as np
 
 
 def filter_dict_list_equal_or_not(data_table, filter_key, filter_value, isEqual):
@@ -15,6 +16,10 @@ def filter_dict_list_contain_or_not(data_table, filter_key, filter_value, isCont
     else:
         result = list(filter(lambda item: filter_value not in item[filter_key], data_table))
     return result
+
+
+def extract_dict_list_to_NumPyArray(table, key):
+    return np.array([i for i in [j[key] for j in table]])
 
 
 def sort_dict_list(data_table, sort_keys):
