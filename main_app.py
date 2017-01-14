@@ -8,16 +8,6 @@ from collections import OrderedDict
 
 
 def main():
-    # filter_merge_acquisition()
-
-    # filter_company_industry()
-
-    # combine_industry_and_acquisition()
-
-    # filter_ceo_data()
-
-    # sort_ceo_final_data()
-
     # table = re.excel_table_to_OrderedDict(file='M&A_industry_combine.xls', by_name=u'combine_data')
     # years=[]
     # for item in table:
@@ -64,33 +54,198 @@ def main():
     # print(len(result))
     # we.write_excel('company_industry_can_not_research.xls', 'data', result)
 
-    table = re.excel_table_to_OrderedDict_bySheetName(file='M&A_industry_combine_except2017.xls',
-                                                      by_name=u'SucceedAndNonRelevance')
+
+    # table = re.excel_table_to_OrderedDict_bySheetName(file='M&A_industry_combine_except2017.xls',
+    #                                                   by_name=u'SucceedAndNonRelevance')
+    # for item in table:
+    #     item['Year'] = str(item['FirstDeclareDate']).split('-')[0]
+    # table.sort(key=itemgetter('Stkcd'))
+    # result = []
+    # for StockId, items1 in groupby(table, key=itemgetter('Stkcd')):
+    #     # print(StockId)
+    #     for Year, items2 in groupby(items1, key=itemgetter('Year')):
+    #         app = OrderedDict()
+    #         app['Stkcd'] = StockId
+    #         lenItem2 = 0
+    #         app['Year'] = Year
+    #         # print(Year)
+    #         for i in items2:
+    #             lenItem2 += 1
+    #             # print(' ', i)
+    #         app['Times'] = lenItem2
+    #         result.append(app)
+    # for item in result:
+    #     print(item)
+    # print(len(result))
+    # we.write_excel('M&A_industry_count_by_StkcdAndYear.xls', 'data', result)
+
+
+    # table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure.xls',
+    #                                                   by_name=u'Tenure')
+    # result=[item for item in table if not str(item['行业代码']).startswith('J')]
+    # common_lib.print_dict_list(result)
+    # print(len(result))
+    # we.write_excel('GM_Tenure_with_out_J.xls', 'data', result)
+
+    # table = re.excel_table_to_OrderedDict_bySheetName(file='financial_index_data/FI_T1_Filter(12-31).xls',
+    #                                                   by_name=u'data')
+    # print(len(table))
+    # table = sorted(table, key=itemgetter('Stkcd', 'Accper'))
+    # result = []
+    # for Stkcd, items1 in groupby(table, key=itemgetter('Stkcd')):
+    #     for Accper, items2 in groupby(items1, key=itemgetter('Accper')):
+    #         app = OrderedDict()
+    #         app['Stkcd'] = Stkcd
+    #         app['Accper'] = Accper
+    #         lenItems2 = 0
+    #         tempList = []
+    #         for i in items2:
+    #             lenItems2 += 1
+    #             tempList.append(OrderedDict(i))
+    #         if lenItems2 == 1:
+    #             app.update(tempList[0])
+    #         else:
+    #             app.update([j for j in tempList if j['Typrep'] == 'A'][0])
+    #         result.append(app)
+    # # common_lib.print_dict_list(result)
+    # print(len(result))
+    # we.write_excel('financial_index_data/FI_T1_Filter(12-31)_Final.xls', 'data', result)
+
+    # table = re.excel_table_to_OrderedDict_bySheetName(file='financial_index_data/FI_T5_Filter(12-31).xls',
+    #                                                   by_name=u'data')
+    # print(len(table))
+    # table = sorted(table, key=itemgetter('Stkcd', 'Accper'))
+    # result = []
+    # for Stkcd, items1 in groupby(table, key=itemgetter('Stkcd')):
+    #     for Accper, items2 in groupby(items1, key=itemgetter('Accper')):
+    #         app = OrderedDict()
+    #         app['Stkcd'] = Stkcd
+    #         app['Accper'] = Accper
+    #         tempList = []
+    #         for i in items2:
+    #             tempList.append(OrderedDict(i))
+    #         print(Stkcd)
+    #         print(Accper)
+    #         print(tempList)
+    #         if len(tempList) == 1:
+    #             app.update(tempList[0])
+    #         else:
+    #             app.update([j for j in tempList if j['Typrep'] == 'A'][0])
+    #         result.append(app)
+    # # common_lib.print_dict_list(result)
+    # print(len(result))
+    # we.write_excel('financial_index_data/FI_T5_Filter(12-31)_Final.xls', 'data', result)
+
+    # FI_T1_table = re.excel_table_to_OrderedDict_bySheetName(file='financial_index_data/FI_T1_Filter(12-31)_Final.xls',
+    #                                                         by_name=u'data')
+    # FI_T5_table = re.excel_table_to_OrderedDict_bySheetName(file='financial_index_data/FI_T5_Filter(12-31)_Final.xls',
+    #                                                         by_name=u'data')
+    # FI_T10_table = re.excel_table_to_OrderedDict_bySheetName(file='financial_index_data/FI_T10_Filter(12-31)_Final.xls',
+    #                                                         by_name=u'data')
+    # FI_T1 = [{'Stkcd': item['Stkcd'], 'Accper': item['Accper'], 'Typrep': item['Typrep']} for item in FI_T1_table]
+    # FI_T5 = [{'Stkcd': item['Stkcd'], 'Accper': item['Accper'], 'Typrep': item['Typrep']} for item in FI_T5_table]
+    # print(FI_T1)
+    # print(len(FI_T1))
+    # print(len(FI_T5))
+
+    # table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_out_J.xls', by_name=u'data')
+    # result = []
+    # for StockId, items in groupby(table, key=itemgetter('StockId')):
+    #     tempList = []
+    #     for i in items:
+    #         tempList.append(OrderedDict(i))
+    #
+    #     tempList.sort(key=itemgetter('Year'))
+    #     tempList.reverse()
+    #
+    #     flag = 0
+    #     for i in range(len(tempList)):
+    #         if tempList[i]['GM_Name'] == '':
+    #             continue
+    #         GMName=tempList[i]['GM_Name']
+    #         Education=tempList[i]['教育背景']
+    #         JRLY=tempList[i]['继任来源']
+    #         IsAgent=tempList[i]['是否代理']
+    #         for j in range(flag, i):
+    #             tempList[j]['GM_Name'] = tempList[i]['GM_Name']
+    #             tempList[j]['教育背景'] = tempList[i]['教育背景']
+    #             tempList[j]['继任来源'] = tempList[i]['继任来源']
+    #             tempList[j]['是否代理'] = tempList[i]['是否代理']
+    #         flag = i + 1
+    #     tempList.sort(key=itemgetter('Year'))
+    #     result.extend(tempList)
+    # common_lib.print_dict_list(result)
+    # print(len(result))
+    # we.write_excel('GM_Tenure_with_out_J_FullVersion.xls', 'data', result)
+
+    # table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_out_J_FullVersion.xls', by_name=u'data')
+    # for item in table:
+    #     StockId = str(int(item['StockId']))
+    #     lenId = len(StockId)
+    #     item['StockId'] = StockId if lenId == 6 \
+    #         else '0' + StockId if lenId == 5 \
+    #         else '00' + StockId if lenId == 4 \
+    #         else '000' + StockId if lenId == 3 \
+    #         else '0000' + StockId if lenId == 2 \
+    #         else '00000' + StockId
+    #     item['Year']=str(int(item['Year']))
+    #     item['ipo_year'] = str(int(item['ipo_year']))
+    #     item['start_year'] = str(int(item['start_year']))
+    #     item['tenure'] = str(int(item['tenure']))
+    # we.write_excel('GM_Tenure_with_out_J_FullVersion.xls', 'data', table)
+    # table.reverse()
+    # common_lib.print_dict_list(table)
+    # print(len(table))
+
+    # table=[]
+    # for i in range(5):
+    #     table.extend(re.excel_table_to_OrderedDict_byIndex(file='company_assets_ALL.xls',by_index=i,dataRow=3))
+    # table=[item for item in table if str(item['Accper']).endswith('12-31')]
+    # we.write_excel('company_assets_Filter(12-31).xls', 'data', table)
+
+
+    table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_out_J_FullVersion.xls', by_name=u'data')
+    print(len(table))
+    FirmAssets = re.excel_table_to_OrderedDict_bySheetName(file='company_assets_Filter(12-31).xls', by_name=u'data')
+    print(len(FirmAssets))
+    FinancialIndex = re.excel_table_to_OrderedDict_bySheetName(
+        file='financial_index_data/FI_T1_Filter(12-31)_Final.xls', by_name=u'data')
+    print(len(FinancialIndex))
+    FirmAge = re.excel_table_to_OrderedDict_bySheetName(file='IPO_Cobasic.xls', by_name=u'IPO_Cobasic')
+    print(len(FirmAge))
+    # CEOAge=[]
+    # for i in range(9):
+    #     CEOAge.extend((re.excel_table_to_OrderedDict_byIndex(file='CG_Director_ALL.xls',by_index=i,dataRow=1)))
+    # print(len(CEOAge))
     for item in table:
-        item['Year'] = str(item['FirstDeclareDate']).split('-')[0]
-    table.sort(key=itemgetter('Stkcd'))
+        app = OrderedDict()
+        asset = [x for x in FirmAssets if
+                 x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
+        print(asset)
+        # app['TotalAsset'] = asset[0]['A001000000']
+        app['TotalAsset'] = float(max(asset, key=itemgetter('A001000000'))['A001000000'])
 
-    result = []
-    for StockId, items1 in groupby(table, key=itemgetter('Stkcd')):
-        # app = OrderedDict()
-        # app['Stkcd'] = StockId
-        # print(StockId)
-        for Year, items2 in groupby(items1, key=itemgetter('Year')):
-            app = OrderedDict()
-            app['Stkcd'] = StockId
-            lenItem2 = 0
-            app['Year'] = Year
-            # print(Year)
-            for i in items2:
-                lenItem2 += 1
-                # print(' ', i)
-            app['Times'] = lenItem2
-            result.append(app)
+        F_Index = [x for x in FinancialIndex if
+                   x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
+        # print(F_Index)
+        app['Lev'] = F_Index[0]['F011201A']
+        app['CashRatio'] = F_Index[0]['F010401A']
 
-    for item in result:
-        print(item)
-    print(len(result))
-    we.write_excel('M&A_industry_count_by_StkcdAndYear.xls', 'data', result)
+        Firm_Age = [x for x in FirmAge if x['Stkcd'] == item['StockId']]
+        year = int(str(Firm_Age[0]['Estbdt']).split('-')[0])
+        month = int(str(Firm_Age[0]['Estbdt']).split('-')[1])
+        startYear = year if month <= 6 else year + 1
+        app['FirmAge'] = str(int(item['Year']) - startYear + 1)
+
+        # Ceo_Age=[x for x in CEOAge if x['Stkcd'] == item['StockId'] and str(x['Reptdt']).split('-')[0]==item['Year'] and x['D0101b']==item['GM_Name']]
+        # app['CEOAge']=Ceo_Age[0]['D0401b']
+
+        item.update(app)
+    # common_lib.print_dict_list(table)
+    print(table[0])
+    print(len(table))
+
+    pass
 
 
 def filter_ceo_data():
@@ -156,7 +311,7 @@ def combine_industry_and_acquisition():
 def filter_company_industry():
     '''
     过滤公司行业数据：
-    剔除B股、ST股、金融行业（行业代码已J开头）
+    剔除B股、ST股、金融行业（行业代码J开头）
     '''
     tables = re.excel_table_to_OrderedDict_bySheetName(file='company-industry.xls', by_name=u'CG_Co')
     print(len(tables))
@@ -256,6 +411,39 @@ def group_data(data_table, group_col, group_title):
         result.append(app)
         # print(' ', lenItem)
     return result
+
+
+def filter_FI_12_31():
+    table = []
+    for i in range(4):
+        table.extend(
+            re.excel_table_to_OrderedDict_byIndex(file='financial_index_data/FI_T1_ALL.xls', by_index=i, dataRow=3))
+    table = [item for item in table if str(item['Accper']).endswith('12-31')]
+    # common_lib.print_dict_list(table)
+    print(len(table))
+    print(len([item for item in table if str(item['Typrep']) == 'A']))
+    print(len([item for item in table if str(item['Typrep']) == 'B']))
+    we.write_excel('financial_index_data/FI_T1_Filter(12-31).xls', 'data', table)
+
+    table = []
+    for i in range(4):
+        table.extend(
+            re.excel_table_to_OrderedDict_byIndex(file='financial_index_data/FI_T5_ALL.xls', by_index=i, dataRow=3))
+    table = [item for item in table if str(item['Accper']).endswith('12-31')]
+    # common_lib.print_dict_list(table)
+    print(len(table))
+    print(len([item for item in table if str(item['Typrep']) == 'A']))
+    print(len([item for item in table if str(item['Typrep']) == 'B']))
+    we.write_excel('financial_index_data/FI_T5_Filter(12-31).xls', 'data', table)
+
+    table = []
+    for i in range(2):
+        table.extend(
+            re.excel_table_to_OrderedDict_byIndex(file='financial_index_data/FI_T10_ALL.xls', by_index=i, dataRow=3))
+    table = [item for item in table if str(item['Accper']).endswith('12-31')]
+    # common_lib.print_dict_list(table)
+    print(len(table))
+    we.write_excel('financial_index_data/FI_T10_Filter(12-31).xls', 'data', table)
 
 
 if __name__ == "__main__":
