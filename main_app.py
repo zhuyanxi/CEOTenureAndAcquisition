@@ -5,6 +5,7 @@ from operator import itemgetter
 from collections import Counter
 from itertools import groupby
 from collections import OrderedDict
+import time
 
 
 def main():
@@ -204,47 +205,52 @@ def main():
     # we.write_excel('company_assets_Filter(12-31).xls', 'data', table)
 
 
-    table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_out_J_FullVersion.xls', by_name=u'data')
-    print(len(table))
-    FirmAssets = re.excel_table_to_OrderedDict_bySheetName(file='company_assets_Filter(12-31).xls', by_name=u'data')
-    print(len(FirmAssets))
-    FinancialIndex = re.excel_table_to_OrderedDict_bySheetName(
-        file='financial_index_data/FI_T1_Filter(12-31)_Final.xls', by_name=u'data')
-    print(len(FinancialIndex))
-    FirmAge = re.excel_table_to_OrderedDict_bySheetName(file='IPO_Cobasic.xls', by_name=u'IPO_Cobasic')
-    print(len(FirmAge))
-    # CEOAge=[]
+    # table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_out_J_FullVersion.xls', by_name=u'data')
+    # print(len(table))
+    # FirmAssets = re.excel_table_to_OrderedDict_bySheetName(file='company_assets_Filter(12-31).xls', by_name=u'data')
+    # print(len(FirmAssets))
+    # FinancialIndex = re.excel_table_to_OrderedDict_bySheetName(
+    #     file='financial_index_data/FI_T1_Filter(12-31)_Final.xls', by_name=u'data')
+    # print(len(FinancialIndex))
+    # FirmAge = re.excel_table_to_OrderedDict_bySheetName(file='IPO_Cobasic.xls', by_name=u'IPO_Cobasic')
+    # print(len(FirmAge))
+    # for item in table:
+    #     app = OrderedDict()
+    #     asset = [x for x in FirmAssets if
+    #              x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
+    #     print(asset)
+    #     # app['TotalAsset'] = asset[0]['A001000000']
+    #     app['TotalAsset'] = float(max(asset, key=itemgetter('A001000000'))['A001000000'])
+    #
+    #     F_Index = [x for x in FinancialIndex if
+    #                x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
+    #     print(F_Index)
+    #     app['Lev'] = F_Index[0]['F011201A']
+    #     app['CashRatio'] = F_Index[0]['F010401A']
+    #
+    #     Firm_Age = [x for x in FirmAge if x['Stkcd'] == item['StockId']]
+    #     year = int(str(Firm_Age[0]['Estbdt']).split('-')[0])
+    #     month = int(str(Firm_Age[0]['Estbdt']).split('-')[1])
+    #     startYear = year if month <= 6 else year + 1
+    #     app['FirmAge'] = str(int(item['Year']) - startYear + 1)
+    #
+    #     item.update(app)
+    # print(table[0])
+    # print(len(table))
+    # we.write_excel('GM_Tenure_with_Param.xls', 'data', table)
+
+    start = time.clock()
+    print(start)
+
+    # CEOAge = []
     # for i in range(9):
-    #     CEOAge.extend((re.excel_table_to_OrderedDict_byIndex(file='CG_Director_ALL.xls',by_index=i,dataRow=1)))
+    #     CEOAge.extend((re.excel_table_to_OrderedDict_byIndex(file='CG_Director_ALL.xls', by_index=i, dataRow=1)))
     # print(len(CEOAge))
-    for item in table:
-        app = OrderedDict()
-        asset = [x for x in FirmAssets if
-                 x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
-        print(asset)
-        # app['TotalAsset'] = asset[0]['A001000000']
-        app['TotalAsset'] = float(max(asset, key=itemgetter('A001000000'))['A001000000'])
+    add_ceoAge_to_GMTenure()
 
-        F_Index = [x for x in FinancialIndex if
-                   x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
-        # print(F_Index)
-        app['Lev'] = F_Index[0]['F011201A']
-        app['CashRatio'] = F_Index[0]['F010401A']
-
-        Firm_Age = [x for x in FirmAge if x['Stkcd'] == item['StockId']]
-        year = int(str(Firm_Age[0]['Estbdt']).split('-')[0])
-        month = int(str(Firm_Age[0]['Estbdt']).split('-')[1])
-        startYear = year if month <= 6 else year + 1
-        app['FirmAge'] = str(int(item['Year']) - startYear + 1)
-
-        # Ceo_Age=[x for x in CEOAge if x['Stkcd'] == item['StockId'] and str(x['Reptdt']).split('-')[0]==item['Year'] and x['D0101b']==item['GM_Name']]
-        # app['CEOAge']=Ceo_Age[0]['D0401b']
-
-        item.update(app)
-    # common_lib.print_dict_list(table)
-    print(table[0])
-    print(len(table))
-    we.write_excel(file='GM_Tenure_with_out_J_FullVersion.xls', by_name=u'data')
+    end = time.clock()
+    print(end)
+    print('Running time:%s Seconds' % ((end - start)))
 
     pass
 
@@ -253,23 +259,30 @@ def filter_ceo_data():
     tables = []
     for i in range(1, 10):
         # table = re.excel_table_byname(file='CG_Director_new.xls', by_name=u'CEO' + str(i))
-        table = re.excel_table_to_OrderedDict_bySheetName(file='CG_Director_new.xls', by_name=u'CEO' + str(i))
+        table = re.excel_table_to_OrderedDict_bySheetName(file='CG_Director_ALL.xls', by_name=u'CEO' + str(i))
         print(len(table))
         tables.extend(table)
     print('len of tables: %d' % len(tables))
 
     result = []
+    CMList = ['10', '11', '13']
+    GMList = ['30', '31', '32', '37']
     for item in tables:
         zhiwei = str(item['D0201a'])
-        isCM = zhiwei[0:2]
-        isGM = [zhiwei[2:4], zhiwei[4:6]]
-        if isCM == '11' or '30' in isGM or '32' in isGM or '37' in isGM:
-            if '副' not in item['D0201b']:
-                print(item)
-                result.append(item)
+        isCM = str(zhiwei[0:2])
+        isGM1 = str(zhiwei[2:4])
+        isGM2 = str(zhiwei[4:6])
+        # if isCM == '11' or '30' in isGM or '32' in isGM or '37' in isGM:
+        #     if '副' not in item['D0201b']:
+        #         print(item)
+        #         result.append(item)
+        if isCM in CMList or isGM1 in GMList or isGM2 in GMList:
+            # print(item)
+            result.append(item)
 
     print(len(result))
-    we.write_excel('CEO_final_V2.xls', 'data', result)
+    return result
+    # we.write_excel('CEO_final_V3.xls', 'data', result)
 
 
 def sort_ceo_final_data():
@@ -445,6 +458,37 @@ def filter_FI_12_31():
     # common_lib.print_dict_list(table)
     print(len(table))
     we.write_excel('financial_index_data/FI_T10_Filter(12-31).xls', 'data', table)
+
+
+def add_ceoAge_to_GMTenure():
+    table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param.xls', by_name=u'data')
+    CEOAge = []
+    CEOAge = filter_ceo_data()
+    print(len(CEOAge))
+    for item in table:
+        app = OrderedDict()
+        # Ceo_Age = [x for x in CEOAge if
+        #            x['Stkcd'] == item['StockId'] and str(x['Reptdt']).split('-')[0] == item['Year'] and x['D0101b'] ==
+        #            item['GM_Name']]
+        if item['GM_Name']!='':
+            Ceo_Age = list(filter(lambda x: x['Stkcd'] == item['StockId'] \
+                                            and str(x['Reptdt']).split('-')[0] == item['Year'] \
+                                            and x['D0101b'] == item['GM_Name'], CEOAge))
+            print(Ceo_Age)
+            app['CEOAge'] = Ceo_Age[0]['D0401b']
+            app['CEOSex'] = 1 if Ceo_Age[0]['D0301b'] == '男' else 0
+        else:
+            app['CEOAge'] = ''
+            app['CEOSex'] = ''
+        item.update(app)
+    print(table[0])
+    print(len(table))
+    we.write_excel('GM_Tenure_with_Param(WithCeoAge).xls', 'data', table)
+
+
+def testRunTime():
+    a = sum(range(500000))
+    print(a)
 
 
 if __name__ == "__main__":
