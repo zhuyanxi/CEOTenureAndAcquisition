@@ -27,5 +27,7 @@ def is_int(item):
 # result = sorted(values, key=itemgetter(sort_keys[0], sort_keys[1]))
 # common_lib.print_dict_list(result)
 
-a = np.array([j for j in [i['ACME'] for i in values]])
-print(a)
+# a = np.array([j for j in [i['ACME'] for i in values]])
+# print(a)
+
+

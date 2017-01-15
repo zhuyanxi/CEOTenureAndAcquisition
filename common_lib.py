@@ -2,25 +2,30 @@ from operator import itemgetter
 import numpy as np
 
 
-def Binary_Search_dictList(data_table, val1, val2, val3):
+def Binary_Search_dictList(data_table, StockId, Year, GM_Name):
     lenT = len(data_table)
+    if lenT == 1:
+        x = data_table[0]
+        if x['Stkcd'] == StockId and str(x['Reptdt']).split('-')[0] == Year and x['D0101b'] == GM_Name:
+            return data_table
+        else:
+            return []
     left = 0
-    right = int(lenT) - 1
+    right = int(lenT)
     middle = int((left + right) / 2)
-
-    foundItem = [x for x in data_table[left:middle] if x['Stkcd'] == val1 \
-                 and str(x['Reptdt']).split('-')[0] == val2 \
-                 and x['D0101b'] == val3]
-
+    foundItem = [x for x in data_table[left:middle] if x['Stkcd'] == StockId]
+                 # and str(x['Reptdt']).split('-')[0] == Year \
+                 # and x['D0101b'] == GM_Name]
     if len(foundItem) > 0:
-        return foundItem
-    else:
-        # left=middle
-        foundItem = Binary_Search_dictList(data_table[middle:right], val1, val2, val3)
-        if len(foundItem) > 0:
+        foundItem=[x for x in foundItem if str(x['Reptdt']).split('-')[0] == Year and x['D0101b'] == GM_Name]
+        if len(foundItem)>0:
             return foundItem
         else:
             return []
+    else:
+        foundItem = list(Binary_Search_dictList(list(data_table[middle:right]), StockId, Year, GM_Name))
+        if len(foundItem) > 0:
+            return foundItem
 
 
 def filter_dict_list_equal_or_not(data_table, filter_key, filter_value, isEqual):

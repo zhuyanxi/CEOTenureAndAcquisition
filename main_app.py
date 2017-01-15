@@ -242,13 +242,9 @@ def main():
     start = time.clock()
     print(start)
 
-    # for Stkcd, items in groupby(filter_ceo_data(), key=itemgetter('Stkcd')):
-    #     lenItem = 0
-    #     for i in items:
-    #         lenItem += 1
-    #     print(Stkcd, lenItem)
-
     add_ceoAge_to_GMTenure_V2()
+
+    # testRunTime()
 
     end = time.clock()
     print(end)
@@ -505,29 +501,32 @@ def add_ceoAge_to_GMTenure_V2():
 
         startT = time.clock()
 
-        Ceo_Age = [x for x in CEOAge1 if x['Stkcd'] == item['StockId'] \
-                   and str(x['Reptdt']).split('-')[0] == item['Year'] \
-                   and x['D0101b'] == item['GM_Name']]
-        # Ceo_Age = list(filter(lambda x: x['Stkcd'] == item['StockId'] \
-        #                                 and str(x['Reptdt']).split('-')[0] == item['Year'] \
-        #                                 and x['D0101b'] == item['GM_Name'], CEOAge))
+        # Ceo_Age = [x for x in CEOAge1 if x['Stkcd'] == item['StockId'] \
+        #            and str(x['Reptdt']).split('-')[0] == item['Year'] \
+        #            and x['D0101b'] == item['GM_Name']]
+        # if len(Ceo_Age) > 0:
+        #     app['CEOAge'] = Ceo_Age[0]['D0401b']
+        #     app['CEOSex'] = 1 if Ceo_Age[0]['D0301b'] == '男' else 0
+        # else:
+        #     Ceo_Age = [x for x in CEOAge2 if x['Stkcd'] == item['StockId'] \
+        #                and str(x['Reptdt']).split('-')[0] == item['Year'] \
+        #                and x['D0101b'] == item['GM_Name']]
+        #     if len(Ceo_Age) > 0:
+        #         app['CEOAge'] = Ceo_Age[0]['D0401b']
+        #         app['CEOSex'] = 1 if Ceo_Age[0]['D0301b'] == '男' else 0
+        #     else:
+        #         app['CEOAge'] = ''
+        #         app['CEOSex'] = ''
 
-
-
-
+        Ceo_Age = []
+        if item['GM_Name'] != '':
+            Ceo_Age = common_lib.Binary_Search_dictList(CEOAge, item['StockId'], item['Year'], item['GM_Name'])
         if len(Ceo_Age) > 0:
             app['CEOAge'] = Ceo_Age[0]['D0401b']
             app['CEOSex'] = 1 if Ceo_Age[0]['D0301b'] == '男' else 0
         else:
-            Ceo_Age = [x for x in CEOAge2 if x['Stkcd'] == item['StockId'] \
-                       and str(x['Reptdt']).split('-')[0] == item['Year'] \
-                       and x['D0101b'] == item['GM_Name']]
-            if len(Ceo_Age) > 0:
-                app['CEOAge'] = Ceo_Age[0]['D0401b']
-                app['CEOSex'] = 1 if Ceo_Age[0]['D0301b'] == '男' else 0
-            else:
-                app['CEOAge'] = ''
-                app['CEOSex'] = ''
+            app['CEOAge'] = ''
+            app['CEOSex'] = ''
 
         print(Ceo_Age)
         endT = time.clock()
@@ -537,6 +536,11 @@ def add_ceoAge_to_GMTenure_V2():
     print(GM_Table[0])
     print(len(GM_Table))
     we.write_excel('GM_Tenure_with_Param(WithCeoAge).xls', 'data', GM_Table)
+
+
+def testRunTime():
+    a = sum(range(5000000))
+    print(a)
 
 
 if __name__ == "__main__":
