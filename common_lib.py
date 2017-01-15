@@ -2,6 +2,27 @@ from operator import itemgetter
 import numpy as np
 
 
+def Binary_Search_dictList(data_table, val1, val2, val3):
+    lenT = len(data_table)
+    left = 0
+    right = int(lenT) - 1
+    middle = int((left + right) / 2)
+
+    foundItem = [x for x in data_table[left:middle] if x['Stkcd'] == val1 \
+                 and str(x['Reptdt']).split('-')[0] == val2 \
+                 and x['D0101b'] == val3]
+
+    if len(foundItem) > 0:
+        return foundItem
+    else:
+        # left=middle
+        foundItem = Binary_Search_dictList(data_table[middle:right], val1, val2, val3)
+        if len(foundItem) > 0:
+            return foundItem
+        else:
+            return []
+
+
 def filter_dict_list_equal_or_not(data_table, filter_key, filter_value, isEqual):
     if isEqual:
         result = list(filter(lambda item: item[filter_key] == filter_value, data_table))

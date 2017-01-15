@@ -242,11 +242,13 @@ def main():
     start = time.clock()
     print(start)
 
-    # CEOAge = []
-    # for i in range(9):
-    #     CEOAge.extend((re.excel_table_to_OrderedDict_byIndex(file='CG_Director_ALL.xls', by_index=i, dataRow=1)))
-    # print(len(CEOAge))
-    add_ceoAge_to_GMTenure()
+    # for Stkcd, items in groupby(filter_ceo_data(), key=itemgetter('Stkcd')):
+    #     lenItem = 0
+    #     for i in items:
+    #         lenItem += 1
+    #     print(Stkcd, lenItem)
+
+    add_ceoAge_to_GMTenure_V2()
 
     end = time.clock()
     print(end)
@@ -462,19 +464,22 @@ def filter_FI_12_31():
 
 def add_ceoAge_to_GMTenure():
     table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param.xls', by_name=u'data')
-    CEOAge = []
     CEOAge = filter_ceo_data()
     print(len(CEOAge))
     for item in table:
         app = OrderedDict()
-        # Ceo_Age = [x for x in CEOAge if
-        #            x['Stkcd'] == item['StockId'] and str(x['Reptdt']).split('-')[0] == item['Year'] and x['D0101b'] ==
-        #            item['GM_Name']]
-        if item['GM_Name']!='':
-            Ceo_Age = list(filter(lambda x: x['Stkcd'] == item['StockId'] \
-                                            and str(x['Reptdt']).split('-')[0] == item['Year'] \
-                                            and x['D0101b'] == item['GM_Name'], CEOAge))
-            print(Ceo_Age)
+
+        startT = time.clock()
+        Ceo_Age = [x for x in CEOAge if x['Stkcd'] == item['StockId'] \
+                   and str(x['Reptdt']).split('-')[0] == item['Year'] \
+                   and x['D0101b'] == item['GM_Name']]
+        # Ceo_Age = list(filter(lambda x: x['Stkcd'] == item['StockId'] \
+        #                                 and str(x['Reptdt']).split('-')[0] == item['Year'] \
+        #                                 and x['D0101b'] == item['GM_Name'], CEOAge))
+        print(Ceo_Age)
+        endT = time.clock()
+        print('Running time:%s Seconds' % ((endT - startT)))
+        if len(Ceo_Age) > 0:
             app['CEOAge'] = Ceo_Age[0]['D0401b']
             app['CEOSex'] = 1 if Ceo_Age[0]['D0301b'] == '男' else 0
         else:
@@ -486,9 +491,52 @@ def add_ceoAge_to_GMTenure():
     we.write_excel('GM_Tenure_with_Param(WithCeoAge).xls', 'data', table)
 
 
-def testRunTime():
-    a = sum(range(500000))
-    print(a)
+def add_ceoAge_to_GMTenure_V2():
+    GM_Table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param.xls', by_name=u'data')
+    CEOAge = filter_ceo_data()
+    CEOAge.sort(key=itemgetter('Stkcd'))
+    lenCEO = len(CEOAge)
+    print(lenCEO)
+    CEOAge1 = CEOAge[0:int(lenCEO / 2)]
+    CEOAge2 = CEOAge[int(lenCEO / 2):int(lenCEO)]
+
+    for item in GM_Table:
+        app = OrderedDict()
+
+        startT = time.clock()
+
+        Ceo_Age = [x for x in CEOAge1 if x['Stkcd'] == item['StockId'] \
+                   and str(x['Reptdt']).split('-')[0] == item['Year'] \
+                   and x['D0101b'] == item['GM_Name']]
+        # Ceo_Age = list(filter(lambda x: x['Stkcd'] == item['StockId'] \
+        #                                 and str(x['Reptdt']).split('-')[0] == item['Year'] \
+        #                                 and x['D0101b'] == item['GM_Name'], CEOAge))
+
+
+
+
+        if len(Ceo_Age) > 0:
+            app['CEOAge'] = Ceo_Age[0]['D0401b']
+            app['CEOSex'] = 1 if Ceo_Age[0]['D0301b'] == '男' else 0
+        else:
+            Ceo_Age = [x for x in CEOAge2 if x['Stkcd'] == item['StockId'] \
+                       and str(x['Reptdt']).split('-')[0] == item['Year'] \
+                       and x['D0101b'] == item['GM_Name']]
+            if len(Ceo_Age) > 0:
+                app['CEOAge'] = Ceo_Age[0]['D0401b']
+                app['CEOSex'] = 1 if Ceo_Age[0]['D0301b'] == '男' else 0
+            else:
+                app['CEOAge'] = ''
+                app['CEOSex'] = ''
+
+        print(Ceo_Age)
+        endT = time.clock()
+        print('Running time:%s Seconds' % ((endT - startT)))
+
+        item.update(app)
+    print(GM_Table[0])
+    print(len(GM_Table))
+    we.write_excel('GM_Tenure_with_Param(WithCeoAge).xls', 'data', GM_Table)
 
 
 if __name__ == "__main__":
