@@ -244,6 +244,7 @@ def main():
     # common_lib.print_dict_list(table)
     print(table[0])
     print(len(table))
+    we.write_excel(file='GM_Tenure_with_out_J_FullVersion.xls', by_name=u'data')
 
     pass
 
