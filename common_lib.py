@@ -73,6 +73,10 @@ def sort_dict_list_three_keys(data_table, sort_keys):
     return sorted(data_table, key=itemgetter(sort_keys[0], sort_keys[1], sort_keys[2]))
 
 
+def write_dict_list_to_TxtFile(data_table):
+    pass
+
+
 def print_dict_list(data_table):
     for item in data_table:
         print(item)
