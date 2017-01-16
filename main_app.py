@@ -1,5 +1,6 @@
 import read_excel as re
 import write_excel as we
+import mongoDbHelper as mdb
 import common_lib
 from operator import itemgetter
 from collections import Counter
@@ -242,8 +243,8 @@ def main():
     start = time.clock()
     print(start)
 
-    add_ceoAge_to_GMTenure_V2()
-
+    # add_ceoAge_to_GMTenure_V2()
+    add_ceoAge_to_GMTenure_V3()
     # testRunTime()
 
     end = time.clock()
@@ -261,6 +262,7 @@ def filter_ceo_data():
         print(len(table))
         tables.extend(table)
     print('len of tables: %d' % len(tables))
+    return tables
 
     result = []
     CMList = ['10', '11', '13']
@@ -518,6 +520,10 @@ def add_ceoAge_to_GMTenure_V2():
         #         app['CEOAge'] = ''
         #         app['CEOSex'] = ''
 
+        if item['StockId'] == '600002':
+            a = 1
+            b = 2
+
         Ceo_Age = []
         if item['GM_Name'] != '':
             Ceo_Age = common_lib.Binary_Search_dictList(CEOAge, item['StockId'], item['Year'], item['GM_Name'])
@@ -536,6 +542,35 @@ def add_ceoAge_to_GMTenure_V2():
     print(GM_Table[0])
     print(len(GM_Table))
     we.write_excel('GM_Tenure_with_Param(WithCeoAge).xls', 'data', GM_Table)
+
+
+def add_ceoAge_to_GMTenure_V3():
+    GM_Table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param.xls', by_name=u'data')
+    mongoClient = mdb.connect_to_db()
+    CG_Director_List = mdb.Get_CG_Director_ALL(mongoClient)
+
+    for item in GM_Table:
+        app = OrderedDict()
+
+        startT = time.clock()
+        Ceo_Age = []
+        if item['GM_Name'] != '':
+            # Ceo_Age = mdb.Search_CG_Director_ALL(CG_Director_List, item['StockId'], item['Year'], item['GM_Name'])
+            Ceo_Age=CG_Director_List.find({'Stkcd': item['StockId'], 'Reptdt': item['Year']+'-12-31', 'D0101b': item['GM_Name']})
+        if len(Ceo_Age) > 0:
+            app['CEOAge'] = Ceo_Age[0]['D0401b']
+            app['CEOSex'] = 1 if Ceo_Age[0]['D0301b'] == '男' else 0
+        else:
+            app['CEOAge'] = ''
+            app['CEOSex'] = ''
+        print(Ceo_Age)
+        endT = time.clock()
+        print('Running time:%s Seconds' % ((endT - startT)))
+
+        item.update(app)
+    print(GM_Table[5])
+    print(len(GM_Table))
+    # we.write_excel('GM_Tenure_with_Param(WithCeoAge).xls', 'data', GM_Table)
 
 
 def testRunTime():
