@@ -86,15 +86,18 @@ if __name__ == "__main__":
     for i in range(30000):
         startX = time.clock()
         # r_collection = db.find({'D0401b': {"$gte": 30, "$lte": 50}})
-        r_collection = db.find({'Stkcd': '300139', 'Reptdt': '2014-12-31', 'D0101b': '崔劲'})
+        r_collection = db.find_one({'Stkcd': '300139', 'Reptdt': '2014-12-31', 'D0101b': '崔劲'})
         # app=OrderedDict()
-        for row in r_collection:
+        # for row in r_collection:
             # app['Stkcd']=row['Stkcd']
             # app['Reptdt'] = row['Reptdt']
             # app['Name'] = row['D0101b']
-            print(row)
+            # print(row)
+            # len=0
         # r_Iter=r_collection.__iter__()
-        # print(r_collection[0]['Stkcd'],' ',r_collection[0]['D0101b'],r_collection[0]['Reptdt'])
+        # result=[i for i in r_collection]
+        # print(result)
+        print(r_collection)
         endX = time.clock()
         lenT+=1
         print('%s Length' % lenT)

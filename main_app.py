@@ -555,8 +555,8 @@ def add_ceoAge_to_GMTenure_V3():
         startT = time.clock()
         Ceo_Age = []
         if item['GM_Name'] != '':
-            # Ceo_Age = mdb.Search_CG_Director_ALL(CG_Director_List, item['StockId'], item['Year'], item['GM_Name'])
-            Ceo_Age=CG_Director_List.find({'Stkcd': item['StockId'], 'Reptdt': item['Year']+'-12-31', 'D0101b': item['GM_Name']})
+            Ceo_Age = mdb.Search_CG_Director_ALL(CG_Director_List, item['StockId'], item['Year'], item['GM_Name'])
+            # Ceo_Age=CG_Director_List.find({'Stkcd': item['StockId'], 'Reptdt': item['Year']+'-12-31', 'D0101b': item['GM_Name']})
         if len(Ceo_Age) > 0:
             app['CEOAge'] = Ceo_Age[0]['D0401b']
             app['CEOSex'] = 1 if Ceo_Age[0]['D0301b'] == '男' else 0
