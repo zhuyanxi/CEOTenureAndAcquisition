@@ -7,6 +7,7 @@ from collections import Counter
 from itertools import groupby
 from collections import OrderedDict
 import time
+import RWTXT
 
 
 def main():
@@ -243,8 +244,9 @@ def main():
     start = time.clock()
     print(start)
 
+    add_ceoAge_to_GMTenure()
     # add_ceoAge_to_GMTenure_V2()
-    add_ceoAge_to_GMTenure_V3()
+    # add_ceoAge_to_GMTenure_V3()
     # testRunTime()
 
     end = time.clock()
@@ -460,33 +462,39 @@ def filter_FI_12_31():
     we.write_excel('financial_index_data/FI_T10_Filter(12-31).xls', 'data', table)
 
 
+def calc_CEOAge():
+    CEOAge = RWTXT.txt_to_dict_list('CG_Director_ALL.txt')
+
+
+
 def add_ceoAge_to_GMTenure():
     table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param.xls', by_name=u'data')
-    CEOAge = filter_ceo_data()
+    CEOAge = RWTXT.txt_to_dict_list('CG_Director_ALL.txt')
+    CEOAge.sort(key=itemgetter('Stkcd'), reverse=True)
+    lenCEO = len(CEOAge)
     print(len(CEOAge))
+    CEOAge1 = CEOAge[0:int(lenCEO / 2)]
+    CEOAge2 = CEOAge[int(lenCEO / 2):int(lenCEO)]
     for item in table:
         app = OrderedDict()
 
         startT = time.clock()
-        Ceo_Age = [x for x in CEOAge if x['Stkcd'] == item['StockId'] \
-                   and str(x['Reptdt']).split('-')[0] == item['Year'] \
-                   and x['D0101b'] == item['GM_Name']]
-        # Ceo_Age = list(filter(lambda x: x['Stkcd'] == item['StockId'] \
-        #                                 and str(x['Reptdt']).split('-')[0] == item['Year'] \
-        #                                 and x['D0101b'] == item['GM_Name'], CEOAge))
-        print(Ceo_Age)
-        endT = time.clock()
-        print('Running time:%s Seconds' % ((endT - startT)))
+        Ceo_Age = []
+        if item['GM_Name'] != '':
+            Ceo_Age = common_lib.Group_Search_dictList(CEOAge, item['StockId'], item['Year'], item['GM_Name'])
         if len(Ceo_Age) > 0:
             app['CEOAge'] = Ceo_Age[0]['D0401b']
             app['CEOSex'] = 1 if Ceo_Age[0]['D0301b'] == '男' else 0
         else:
             app['CEOAge'] = ''
             app['CEOSex'] = ''
+        print(Ceo_Age)
+        endT = time.clock()
+        print('Running time:%s Seconds' % ((endT - startT)))
         item.update(app)
     print(table[0])
     print(len(table))
-    we.write_excel('GM_Tenure_with_Param(WithCeoAge).xls', 'data', table)
+    we.write_excel('GM_Tenure_with_Param(WithCeoAge_V2).xls', 'data', table)
 
 
 def add_ceoAge_to_GMTenure_V2():

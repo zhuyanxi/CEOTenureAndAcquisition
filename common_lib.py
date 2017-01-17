@@ -1,5 +1,7 @@
 from operator import itemgetter
 import numpy as np
+from itertools import groupby
+from collections import OrderedDict
 
 
 def Binary_Search_dictList(data_table, StockId, Year, GM_Name):
@@ -26,6 +28,23 @@ def Binary_Search_dictList(data_table, StockId, Year, GM_Name):
         foundItem = list(Binary_Search_dictList(list(data_table[middle:]), StockId, Year, GM_Name))
         if len(foundItem) > 0:
             return foundItem
+        else:
+            return []
+
+
+def Group_Search_dictList(data_table, StockId, Year, GM_Name):
+    for Stkcd,items in groupby(data_table, key=itemgetter('Stkcd')):
+        if Stkcd==StockId:
+            tempList = []
+            for i in items:
+                tempList.append(OrderedDict(i))
+            foundItem=[x for x in tempList if x['Stkcd'] == StockId \
+                     and str(x['Reptdt']).split('-')[0] == Year \
+                     and x['D0101b'] == GM_Name]
+            if len(foundItem)>0:
+                return foundItem
+            else:
+                return []
 
 
 def filter_dict_list_equal_or_not(data_table, filter_key, filter_value, isEqual):
