@@ -4,6 +4,7 @@ from operator import itemgetter
 from collections import OrderedDict
 import traceback
 
+
 def write_txt():
     start = time.clock()
     print(start)
@@ -37,33 +38,45 @@ def write_txt():
     endX = time.clock()
     print('write txt Running time:%s Seconds' % ((endX - startX)))
 
+def write_dict_list_to_txt(file,data):
+    output=open(file,'w',encoding='utf-8')
+    titleList=list(data[0].keys())
+    titles='|'.join(titleList)
+    output.write(titles)
+    for item in data:
+        row = list(OrderedDict(item).values())
+        print(row)
+        item = '|'.join(row)
+        output.write('\n')
+        output.write(item)
+    output.close()
 
 
 def txt_to_dict_list(file):
     data = open(file, 'r', encoding='utf-8')
-    lines=data.readlines()
+    lines = data.readlines()
     # return lines
 
-    print(lines[0])
-    print(lines[1])
-    result=[]
-    keys=str(lines[0][:-1]).split('|')
-    print(keys)
-    for i in range(1,len(lines)):
+    # print(lines[0])
+    # print(lines[1])
+    result = []
+    keys = str(lines[0][:-1]).split('|')
+    # print(keys)
+    for i in range(1, len(lines)):
         row = str(lines[i][:-1]).split('|')
         # print(row)
-        app = OrderedDict()
+        app = {}
         for j in range(len(keys)):
             app[keys[j]] = row[j]
         result.append(app)
     return result
 
 
-# if __name__ == "__main__":
-#     startX = time.clock()
-#     data = txt_to_dict_list('CG_Director_ALL.txt')
-#     print(len(data))
-#     endX = time.clock()
-#     print('write txt Running time:%s Seconds' % ((endX - startX)))
-#     print(data[0])
-#     print(data[0]['Stkcd'])
+    # if __name__ == "__main__":
+    #     startX = time.clock()
+    #     data = txt_to_dict_list('CG_Director_ALL.txt')
+    #     print(len(data))
+    #     endX = time.clock()
+    #     print('write txt Running time:%s Seconds' % ((endX - startX)))
+    #     print(data[0])
+    #     print(data[0]['Stkcd'])

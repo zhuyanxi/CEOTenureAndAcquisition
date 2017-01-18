@@ -244,10 +244,17 @@ def main():
     start = time.clock()
     print(start)
 
-    add_ceoAge_to_GMTenure()
+    # add_ceoAge_to_GMTenure()
     # add_ceoAge_to_GMTenure_V2()
     # add_ceoAge_to_GMTenure_V3()
+    # add_ceoAge_to_GMTenure_V4()
     # testRunTime()
+    # calc_CEOAge()
+    table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param(WithCeoAge_VFinal).xls', by_name=u'data')
+    table=[x for x in table if x['GM_Name']!='' and x['CEOAge']=='']
+    common_lib.print_dict_list(table)
+    print(len(table))
+
 
     end = time.clock()
     print(end)
@@ -464,7 +471,47 @@ def filter_FI_12_31():
 
 def calc_CEOAge():
     CEOAge = RWTXT.txt_to_dict_list('CG_Director_ALL.txt')
+    print(len(CEOAge))
 
+    result = [OrderedDict({'BirthYear': str(int(x['Reptdt'].split('-')[0]) - int(x['D0401b'][:-2])),
+                           'StockId': x['Stkcd'], 'Name': x['D0101b'],
+                           'Sex': '1' if x['D0301b'] == '男' else '0'}) for x in CEOAge if x['D0401b'] != '']
+    # for i in range(len(CEOAge)):
+    #     item = CEOAge[i]
+    #     if item['D0401b'] == '':
+    #         continue
+    #
+    #     start = time.clock()
+    #
+    #     isContainItem = OrderedDict()
+    #     isContain = False
+    #     StockId = str(item['Stkcd'])
+    #     Name = str(item['D0101b'])
+    #     BirthYear = str(int(item['Reptdt'].split('-')[0]) - int(item['D0401b'][:-2]))
+    #     # isContain = [x for x in result if x['StockId'] == StockId and x['Name'] == Name]
+    #     isContainItem['StockId'] = StockId
+    #     isContainItem['Name'] = Name
+    #     if isContainItem in result:
+    #         isContain = True
+    #
+    #     end = time.clock()
+    #     print('Running time:%s Seconds' % (end - start), BirthYear, i)
+    #
+    #     if isContain:
+    #         continue
+    #
+    #     app = OrderedDict()
+    #     app['StockId'] = StockId
+    #     app['Name'] = Name
+    #     app['BirthYear'] = BirthYear
+    #     result.append(app)
+
+    result = list(common_lib.dedupe(result, key=lambda x: (x['StockId'], x['Name'])))
+
+    print(result[123])
+    print(len(result))
+    result.sort(key=itemgetter('StockId', 'Name'))
+    RWTXT.write_dict_list_to_txt('CG_Director_Age.txt', result)
 
 
 def add_ceoAge_to_GMTenure():
@@ -579,6 +626,32 @@ def add_ceoAge_to_GMTenure_V3():
     print(GM_Table[5])
     print(len(GM_Table))
     # we.write_excel('GM_Tenure_with_Param(WithCeoAge).xls', 'data', GM_Table)
+
+
+def add_ceoAge_to_GMTenure_V4():
+    table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param.xls', by_name=u'data')
+    CEOAge = RWTXT.txt_to_dict_list('CG_Director_Age.txt')
+    print(len(CEOAge))
+    for item in table:
+        app = OrderedDict()
+
+        startT = time.clock()
+        Ceo_Age = []
+        if item['GM_Name'] != '':
+            Ceo_Age = [x for x in CEOAge if x['StockId'] == item['StockId'] and x['Name'] == item['GM_Name']]
+        if len(Ceo_Age) > 0:
+            app['CEOAge'] = str(int(item['Year']) - int(Ceo_Age[0]['BirthYear']))
+            app['CEOSex'] = Ceo_Age[0]['Sex']
+        else:
+            app['CEOAge'] = ''
+            app['CEOSex'] = ''
+        print(Ceo_Age)
+        endT = time.clock()
+        print('Running time:%s Seconds' % ((endT - startT)))
+        item.update(app)
+    print(table[0])
+    print(len(table))
+    we.write_excel('GM_Tenure_with_Param(WithCeoAge_VFinal).xls', 'data', table)
 
 
 def testRunTime():
