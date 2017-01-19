@@ -16,6 +16,12 @@ def is_int(item):
     return False
 
 
+def count(n):
+    while n > 0:
+        yield n
+        n -= 1
+
+
 # ivals = list(filter(is_int, values))
 # ivals = list(filter(lambda item: item['Position'] == 1.0, values))
 
@@ -30,5 +36,13 @@ def is_int(item):
 # a = np.array([j for j in [i['ACME'] for i in values]])
 # print(a)
 
-b = common_lib.dedupe(values, key=lambda d: (d['Position'], d['Changtyp']))
-common_lib.print_dict_list(b)
+# b = common_lib.dedupe(values, key=lambda d: (d['Position'], d['Changtyp']))
+# common_lib.print_dict_list(b)
+
+c=count(5)
+print(type(c))
+print(c)
+# print(c.__next__())
+# print(c.__next__())
+b=list(c)
+print(b)
