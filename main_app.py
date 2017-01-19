@@ -203,8 +203,8 @@ def main():
     # table=[]
     # for i in range(5):
     #     table.extend(re.excel_table_to_OrderedDict_byIndex(file='company_assets_ALL.xls',by_index=i,dataRow=3))
-    # table=[item for item in table if str(item['Accper']).endswith('12-31')]
-    # we.write_excel('company_assets_Filter(12-31).xls', 'data', table)
+    # table=[item for item in table if str(item['Accper']).endswith('01-01')]
+    # we.write_excel('company_assets_Filter(01-01).xls', 'data', table)
 
 
     # table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_out_J_FullVersion.xls', by_name=u'data')
@@ -241,25 +241,29 @@ def main():
     # print(len(table))
     # we.write_excel('GM_Tenure_with_Param.xls', 'data', table)
 
-    start = time.clock()
-    print(start)
+    # start = time.clock()
+    # print(start)
+    # # add_ceoAge_to_GMTenure()
+    # # add_ceoAge_to_GMTenure_V2()
+    # # add_ceoAge_to_GMTenure_V3()
+    # # add_ceoAge_to_GMTenure_V4()
+    # # testRunTime()
+    # # calc_CEOAge()
+    # table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param(WithCeoAge_VFinal).xls', by_name=u'data')
+    # table=[x for x in table if x['GM_Name']!='' and x['CEOAge']=='']
+    # common_lib.print_dict_list(table)
+    # print(len(table))
+    # end = time.clock()
+    # print(end)
+    # print('Running time:%s Seconds' % ((end - start)))
 
-    # add_ceoAge_to_GMTenure()
-    # add_ceoAge_to_GMTenure_V2()
-    # add_ceoAge_to_GMTenure_V3()
-    # add_ceoAge_to_GMTenure_V4()
-    # testRunTime()
-    # calc_CEOAge()
-    table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param(WithCeoAge_VFinal).xls', by_name=u'data')
-    table=[x for x in table if x['GM_Name']!='' and x['CEOAge']=='']
-    common_lib.print_dict_list(table)
-    print(len(table))
 
+    # add_Assets0101_to_GMTenure()
 
-    end = time.clock()
-    print(end)
-    print('Running time:%s Seconds' % ((end - start)))
+    # merge_M_A_by_SameTime()
 
+    # calc_M_A_Times()
+    add_M_A_to_GMTenure()
     pass
 
 
@@ -652,6 +656,96 @@ def add_ceoAge_to_GMTenure_V4():
     print(table[0])
     print(len(table))
     we.write_excel('GM_Tenure_with_Param(WithCeoAge_VFinal).xls', 'data', table)
+
+
+def add_Assets0101_to_GMTenure():
+    table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param(WithCeoAge_VFinal).xls',
+                                                      by_name=u'data')
+    print(len(table))
+
+    FirmAssets = re.excel_table_to_OrderedDict_bySheetName(file='company_assets_Filter(01-01).xls', by_name=u'data')
+    print(len(FirmAssets))
+
+    for item in table:
+        app = OrderedDict()
+        asset = [x for x in FirmAssets if
+                 x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
+        print(asset)
+        # app['TotalAsset'] = asset[0]['A001000000']
+        app['TotalAsset(01-01)'] = float(max(asset, key=itemgetter('A001000000'))['A001000000'])
+
+        item.update(app)
+    print(table[0])
+    print(len(table))
+    we.write_excel('GM_Tenure_with_Param(WithCeoAge_VFinal).xls', 'data', table)
+
+
+def add_M_A_to_GMTenure():
+    table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param(WithCeoAge_VFinal).xls',
+                                                      by_name=u'data')
+    print(len(table))
+
+    MACount = re.excel_table_to_OrderedDict_bySheetName(file='M&A_TimeCount.xls', by_name=u'data')
+    print(len(MACount))
+
+    for item in table:
+        app = OrderedDict()
+        count = [x for x in MACount if x['StockId'] == item['StockId'] and x['Year'] == item['Year']]
+        print(count)
+
+        if len(count) > 0:
+            app['MATimes'] = count[0]['Times']
+            app['MATotalExpenseValue'] = count[0]['TotalExpenseValue']
+        else:
+            app['MATimes'] = ''
+            app['MATotalExpenseValue'] = ''
+
+        item.update(app)
+    print(table[0])
+    print(len(table))
+    we.write_excel('GM_Tenure_with_Param(WithCeoAge_VFinal2).xls', 'data', table)
+
+
+def merge_M_A_by_SameTime():
+    table = re.excel_table_to_OrderedDict_bySheetName(file='M&A_MergeTime.xls', by_name=u'SucceedAndNonRelevance')
+    print(len(table))
+
+    result = []
+    for Symbol, items1 in groupby(table, key=itemgetter('Symbol')):
+        for FirstDeclareDate, items2 in groupby(items1, key=itemgetter('FirstDeclareDate')):
+            app = OrderedDict()
+            app['StockId'] = Symbol
+            app['FirstDeclareDate'] = FirstDeclareDate
+            app['Year'] = str(FirstDeclareDate).split('-')[0]
+            ExpenseValue = 0
+            for i in items2:
+                ExpenseValue += float(i['ExpenseValue'])
+            app['ExpenseValue'] = str(ExpenseValue)
+            print(app)
+            result.append(app)
+    we.write_excel('M&A_MergeTime.xls', 'data', result)
+
+
+def calc_M_A_Times():
+    table = re.excel_table_to_OrderedDict_bySheetName(file='M&A_MergeTime.xls', by_name=u'data')
+    print(len(table))
+
+    result = []
+    for StockId, items1 in groupby(table, key=itemgetter('StockId')):
+        for Year, items2 in groupby(items1, key=itemgetter('Year')):
+            app = OrderedDict()
+            app['StockId'] = StockId
+            app['Year'] = Year
+            times = 0
+            TotalExpenseValue = 0
+            for i in items2:
+                times += 1
+                TotalExpenseValue += float(i['ExpenseValue'])
+            app['Times'] = str(times)
+            app['TotalExpenseValue'] = str(TotalExpenseValue)
+            print(app)
+            result.append(app)
+    we.write_excel('M&A_TimeCount.xls', 'data', result)
 
 
 def testRunTime():
