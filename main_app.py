@@ -263,7 +263,8 @@ def main():
     # merge_M_A_by_SameTime()
 
     # calc_M_A_Times()
-    add_M_A_to_GMTenure()
+    # add_M_A_to_GMTenure()
+    add_ceoAge_to_GMTenure_V4()
     pass
 
 
@@ -655,7 +656,7 @@ def add_ceoAge_to_GMTenure_V4():
         item.update(app)
     print(table[0])
     print(len(table))
-    we.write_excel('GM_Tenure_with_Param(WithCeoAge_VFinal).xls', 'data', table)
+    we.write_excel('GM_Tenure_with_Param(WithCeoAge_VFinal3).xls', 'data', table)
 
 
 def add_Assets0101_to_GMTenure():

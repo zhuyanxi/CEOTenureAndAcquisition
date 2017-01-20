@@ -1,6 +1,7 @@
 from operator import itemgetter
 import common_lib
 import numpy as np
+from sklearn.linear_model import LinearRegression
 
 values = [{'Position': 2.0, 'Dimreas': '', 'Name': '胡跃飞', 'Chgdt': '2016-12-10', 'Changtyp': 2.0, 'ACME': 45.23},
           {'Position': 2.0, 'Dimreas': '', 'Name': '胡跃飞', 'Chgdt': '2016-12-10', 'Changtyp': 2.0, 'ACME': 612.78},
@@ -33,16 +34,20 @@ def count(n):
 # result = sorted(values, key=itemgetter(sort_keys[0], sort_keys[1]))
 # common_lib.print_dict_list(result)
 
-# a = np.array([j for j in [i['ACME'] for i in values]])
-# print(a)
+a = np.array([j for j in [[i['ACME']] for i in values]])
+print(a)
+print(type(a))
+print(a.sum(axis=0))
+print()
+
 
 # b = common_lib.dedupe(values, key=lambda d: (d['Position'], d['Changtyp']))
 # common_lib.print_dict_list(b)
 
-c=count(5)
-print(type(c))
-print(c)
-# print(c.__next__())
-# print(c.__next__())
-b=list(c)
-print(b)
+# c = count(5)
+# print(type(c))
+# print(c)
+# # print(c.__next__())
+# # print(c.__next__())
+# b = list(c)
+# print(b)
