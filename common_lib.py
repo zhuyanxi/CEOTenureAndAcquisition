@@ -1,5 +1,5 @@
 from operator import itemgetter
-import numpy as np
+from numpy import *
 from itertools import groupby
 from collections import OrderedDict
 
@@ -74,7 +74,7 @@ def filter_dict_list_contain_or_not(data_table, filter_key, filter_value, isCont
 
 
 def extract_dict_list_to_NumPyArray(table, key):
-    return np.array([i for i in [j[key] for j in table]])
+    return array([i for i in [j[key] for j in table]])
 
 
 def sort_dict_list(data_table, sort_keys):
@@ -104,6 +104,17 @@ def sort_dict_list_three_keys(data_table, sort_keys):
 
 def write_dict_list_to_TxtFile(data_table):
     pass
+
+
+def auto_normalization(data_set):
+    minVals = data_set.min(0)
+    maxVals = data_set.max(0)
+    ranges = maxVals - minVals
+    normDataSet = zeros(shape(data_set))
+    m = data_set.shape[0]
+    normDataSet = data_set - tile(minVals, (m, 1))
+    normDataSet /= tile(ranges, (m, 1))
+    return normDataSet, ranges, minVals
 
 
 def print_dict_list(data_table):
