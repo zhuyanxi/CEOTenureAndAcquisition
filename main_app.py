@@ -206,40 +206,62 @@ def main():
     # table=[item for item in table if str(item['Accper']).endswith('01-01')]
     # we.write_excel('company_assets_Filter(01-01).xls', 'data', table)
 
-
-    # table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_out_J_FullVersion.xls', by_name=u'data')
+    # table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_with_Param(WithCeoAge_VFinal2).xls',
+    #                                                   by_name=u'data')
     # print(len(table))
-    # FirmAssets = re.excel_table_to_OrderedDict_bySheetName(file='company_assets_Filter(12-31).xls', by_name=u'data')
-    # print(len(FirmAssets))
+    # # FirmAssets = re.excel_table_to_OrderedDict_bySheetName(file='company_assets_Filter(12-31).xls', by_name=u'data')
+    # # print(len(FirmAssets))
     # FinancialIndex = re.excel_table_to_OrderedDict_bySheetName(
     #     file='financial_index_data/FI_T1_Filter(12-31)_Final.xls', by_name=u'data')
     # print(len(FinancialIndex))
-    # FirmAge = re.excel_table_to_OrderedDict_bySheetName(file='IPO_Cobasic.xls', by_name=u'IPO_Cobasic')
-    # print(len(FirmAge))
+    # FinancialIndex2 = re.excel_table_to_OrderedDict_bySheetName(
+    #     file='financial_index_data/FI_T5_Filter(12-31)_Final.xls', by_name=u'data')
+    # print(len(FinancialIndex2))
+    # FinancialIndex3 = re.excel_table_to_OrderedDict_bySheetName(
+    #     file='financial_index_data/FI_T10_Filter(12-31)_Final.xls', by_name=u'data')
+    # print(len(FinancialIndex3))
+    # # FirmAge = re.excel_table_to_OrderedDict_bySheetName(file='IPO_Cobasic.xls', by_name=u'IPO_Cobasic')
+    # # print(len(FirmAge))
     # for item in table:
     #     app = OrderedDict()
-    #     asset = [x for x in FirmAssets if
-    #              x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
-    #     print(asset)
-    #     # app['TotalAsset'] = asset[0]['A001000000']
-    #     app['TotalAsset'] = float(max(asset, key=itemgetter('A001000000'))['A001000000'])
-    #
+    #     # asset = [x for x in FirmAssets if
+    #     #          x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
+    #     # print(asset)
+    #     # app['TotalAsset'] = float(max(asset, key=itemgetter('A001000000'))['A001000000'])
     #     F_Index = [x for x in FinancialIndex if
     #                x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
     #     print(F_Index)
-    #     app['Lev'] = F_Index[0]['F011201A']
-    #     app['CashRatio'] = F_Index[0]['F010401A']
+    #     F_Index2 = [x for x in FinancialIndex2 if
+    #                 x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
+    #     print(F_Index2)
+    #     F_Index3 = [x for x in FinancialIndex3 if
+    #                 x['Stkcd'] == item['StockId'] and str(x['Accper']).split('-')[0] == item['Year']]
+    #     print(F_Index3)
     #
-    #     Firm_Age = [x for x in FirmAge if x['Stkcd'] == item['StockId']]
-    #     year = int(str(Firm_Age[0]['Estbdt']).split('-')[0])
-    #     month = int(str(Firm_Age[0]['Estbdt']).split('-')[1])
-    #     startYear = year if month <= 6 else year + 1
-    #     app['FirmAge'] = str(int(item['Year']) - startYear + 1)
-    #
+    #     if len(F_Index) == 0 or len(F_Index2) == 0 or len(F_Index3) == 0:
+    #         continue
+    #     app['EM权益乘数'] = F_Index[0]['F011601A']
+    #     app['EDRatio权益对负债比率'] = F_Index[0]['F011801A']
+    #     app['DMRatio负债与权益市价比率'] = F_Index[0]['F012501B']
+    #     app['ROE净资产收益率A'] = F_Index2[0]['F050501B']
+    #     app['EBIT息税前利润'] = F_Index2[0]['F050601B']
+    #     app['MarketValueA'] = F_Index3[0]['F100801A']
+    #     app['PE1'] = F_Index3[0]['F100101B']
+    #     app['PE2'] = F_Index3[0]['F100102B']
+    #     app['TobinQ_A'] = F_Index3[0]['F100901A']
+    #     app['BTM账面市值比A'] = F_Index3[0]['F100101B']
+    #     app['普通股获利率A'] = F_Index3[0]['F101201B']
+    #     app['企业价值倍数'] = F_Index3[0]['F101301B']
+    #     app['企业价值倍数TTM'] = F_Index3[0]['F101302C']
+    #     # Firm_Age = [x for x in FirmAge if x['Stkcd'] == item['StockId']]
+    #     # year = int(str(Firm_Age[0]['Estbdt']).split('-')[0])
+    #     # month = int(str(Firm_Age[0]['Estbdt']).split('-')[1])
+    #     # startYear = year if month <= 6 else year + 1
+    #     # app['FirmAge'] = str(int(item['Year']) - startYear + 1)
     #     item.update(app)
     # print(table[0])
     # print(len(table))
-    # we.write_excel('GM_Tenure_with_Param.xls', 'data', table)
+    # we.write_excel('GM_Tenure_with_Param(WithCeoAge_VFinal4).xls', 'data', table)
 
     # start = time.clock()
     # print(start)
@@ -264,7 +286,8 @@ def main():
 
     # calc_M_A_Times()
     # add_M_A_to_GMTenure()
-    add_ceoAge_to_GMTenure_V4()
+    # add_ceoAge_to_GMTenure_V4()
+    deal_change_tenure_times()
     pass
 
 
@@ -747,6 +770,45 @@ def calc_M_A_Times():
             print(app)
             result.append(app)
     we.write_excel('M&A_TimeCount.xls', 'data', result)
+
+
+def deal_change_tenure_times():
+    table = re.excel_table_to_OrderedDict_bySheetName(file='GM_Tenure_VFinal.xls', by_name=u'data')
+    print(len(table))
+
+    ceo_change_times = []
+    tenure_one_year = []
+    tenure_under_two_year = []
+    for StockId, items1 in groupby(table, key=itemgetter('StockId')):
+        change_time = 0
+        for GM_Name, items2 in groupby(items1, key=itemgetter('GM_Name')):
+            change_time += 1
+            temp_list = []
+            for i in items2:
+                temp_list.append(OrderedDict(i))
+            if GM_Name != '' and len(temp_list) == 1:
+                tenure_one_year.extend(temp_list)
+            if GM_Name != '' and len(temp_list) <= 2:
+                tenure_under_two_year.extend(temp_list)
+        app_change_time = OrderedDict()
+        app_change_time['StockId'] = StockId
+        app_change_time['ChangeTime'] = change_time - 1
+        ceo_change_times.append(app_change_time)
+
+    print(len(ceo_change_times))
+    print(len(tenure_one_year))
+    print(len(tenure_under_two_year))
+
+    tenure_without_one_year = [i for i in table if i not in tenure_one_year]
+    tenure_without_under_two_year = [i for i in table if i not in tenure_under_two_year]
+    print(len(tenure_without_one_year))
+    print(len(tenure_without_under_two_year))
+
+    we.write_excel('CEO_Change_Time.xls', 'data', ceo_change_times)
+    we.write_excel('GM_Tenure_OneYear.xls', 'data', tenure_one_year)
+    we.write_excel('GM_Tenure_UnderTwoYear.xls', 'data', tenure_under_two_year)
+    we.write_excel('GM_Tenure_Without_OneYear.xls', 'data', tenure_without_one_year)
+    we.write_excel('GM_Tenure_Without_UnderTwoYear.xls', 'data', tenure_without_under_two_year)
 
 
 def testRunTime():

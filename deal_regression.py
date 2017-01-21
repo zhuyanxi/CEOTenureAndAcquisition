@@ -29,22 +29,35 @@ if __name__ == "__main__":
     xVector = np.array([j for j in [[i['tenure'], i['LogTotalAsset(12-31)'],
                                      i['Lev'], i['FirmAge'], i['CEOAge']]
                                     for i in training_data]])
+    print('-' * 50)
     print(yVector)
     print(xVector)
 
-    y_test = np.array([j for j in [[i['MATimes']] for i in test_data]])
-    x_test = np.array([j for j in [[i['tenure'], i['LogTotalAsset(12-31)'], i['Lev'], i['FirmAge'], i['CEOAge']]
-                                   for i in test_data]])
-    # print(y_test)
-    # print(x_test)
+    yNormVector, yRanges, yMinVals = common_lib.auto_normalization(yVector)
+    print('-' * 50)
+    print(yNormVector)
+    print(yRanges)
+    print(yMinVals)
 
-    model = LinearRegression()
-    model.fit(xVector, yVector)
-    print(model)
-    print(model.coef_)
-    print(model.intercept_)
+    xNormVector, xRanges, xMinVals = common_lib.auto_normalization(xVector)
+    print('-' * 50)
+    print(xNormVector)
+    print(xRanges)
+    print(xMinVals)
 
-    predictions = model.predict(x_test)
-    for i, prediction in enumerate(predictions):
-        print('Predicted: %s, Target: %s' % (prediction, y_test[i]))
-    print('R-squared: %.2f' % model.score(x_test, y_test))
+    # y_test = np.array([j for j in [[i['MATimes']] for i in test_data]])
+    # x_test = np.array([j for j in [[i['tenure'], i['LogTotalAsset(12-31)'], i['Lev'], i['FirmAge'], i['CEOAge']]
+    #                                for i in test_data]])
+    # # print(y_test)
+    # # print(x_test)
+    #
+    # model = LinearRegression()
+    # model.fit(xVector, yVector)
+    # print(model)
+    # print(model.coef_)
+    # print(model.intercept_)
+    #
+    # predictions = model.predict(x_test)
+    # for i, prediction in enumerate(predictions):
+    #     print('Predicted: %s, Target: %s' % (prediction, y_test[i]))
+    # print('R-squared: %.2f' % model.score(x_test, y_test))
